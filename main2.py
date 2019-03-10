@@ -482,7 +482,6 @@ def message_handler(message):
 
     chat = message.chat
     text = message.text
-    TeleBot.send_message(ADMIN_ID[0], text)
     user = user_by_id(chat.id)
     print('Got message from {}: {}'.format(chat.first_name, text))
     if user is None and text != '/start':
@@ -494,6 +493,7 @@ def message_handler(message):
         TeleBot.send_message(chat.id, 'Привет. Правила доступны по /rules, ' +
                                       'помощь - по /commands_help')
         USERS[chat.id] = User(chat.id, chat.first_name)
+    TeleBot.send_message(user.id, text)
 
     # /new_situation_NOU_10_60_1_1_help!\nresqueme!\n
     if text.startswith('/new_situation'):
