@@ -495,7 +495,7 @@ def message_handler(message):
 
         # /new_situation_NOU_10_60_1_1_help!\nresqueme!\n
         if text.startswith('/new_situation'):
-            args = text[13:].split('_')
+            args = text[15:].split('_')
             try:
                 TeleBot.send_message(chat.id, str(args))
                 name = args[0]
