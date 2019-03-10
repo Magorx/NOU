@@ -473,43 +473,46 @@ class User:
 
 @TeleBot.message_handler(func=lambda x: True)
 def message_handler(message):
-    if TO_STOP:
-        print('ok')
-        exit(0)
+    try:
+        if TO_STOP:
+            print('ok')
+            exit(0)
 
-    chat = message.chat
-    text = message.text
-    user = user_by_id(chat.id)
-    TeleBot.send_message(chat.id, text)
-    print('Got message from {}: {}'.format(chat.first_name, text))
-    if user is None and text != '/start':
-        TeleBot.send_message(chat.id, 'Напишите мне, пожалуйста, /start, ' +
-                             'чтобы я добавил вас в список пользователей')
-        return 0
+        chat = message.chat
+        text = message.text
+        user = user_by_id(chat.id)
+        TeleBot.send_message(chat.id, text)
+        print('Got message from {}: {}'.format(chat.first_name, text))
+        if user is None and text != '/start':
+            TeleBot.send_message(chat.id, 'Напишите мне, пожалуйста, /start, ' +
+                                 'чтобы я добавил вас в список пользователей')
+            return 0
 
-    if text == '/start':
-        TeleBot.send_message(chat.id, 'Привет. Правила доступны по /rules, ' +
-                                      'помощь - по /commands_help')
-        USERS[chat.id] = User(chat.id, chat.first_name)
+        if text == '/start':
+            TeleBot.send_message(chat.id, 'Привет. Правила доступны по /rules, ' +
+                                          'помощь - по /commands_help')
+            USERS[chat.id] = User(chat.id, chat.first_name)
 
-    # /new_situation_NOU_10_60_1_1_help!\nresqueme!\n
-    if text.startswith('/new_situation'):
-        args = text[13:].split('_')
-        try:
-            name = args[0]
-            danger = int(args[1])
-            sit_len = int(args[2])
-            freq = int(args[3])
-            length = int(args[4])
-            texts = args[5].split('\\n')
-            stat_time = int(time.time())
-            end_time = start_time + sit_len * 60
-            sit = Situation(user, danger, start_time, end_time, freq, length, texts, name)
-            
-            SITUATIONS.append(sit)
-            TeleBot.send_message(chat.id, 'Ситуация создана!')
-        except Exception:
-            warn_invalid_args(chat.id)
+        # /new_situation_NOU_10_60_1_1_help!\nresqueme!\n
+        if text.startswith('/new_situation'):
+            args = text[13:].split('_')
+            try:
+                name = args[0]
+                danger = int(args[1])
+                sit_len = int(args[2])
+                freq = int(args[3])
+                length = int(args[4])
+                texts = args[5].split('\\n')
+                stat_time = int(time.time())
+                end_time = start_time + sit_len * 60
+                sit = Situation(user, danger, start_time, end_time, freq, length, texts, name)
+                
+                SITUATIONS.append(sit)
+                TeleBot.send_message(chat.id, 'Ситуация создана!')
+            except Exception:
+                warn_invalid_args(chat.id)
+    except Exception:
+        TeleBot.send_message(chat.id, 'boom')
 
 
 def main():
