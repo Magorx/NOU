@@ -5,6 +5,7 @@
 from random import randint, choice
 from time import sleep
 import telebot
+import time
 from os import environ
 
 
