@@ -510,7 +510,7 @@ def message_handler(message):
                 SITUATIONS.append(sit)
                 TeleBot.send_message(chat.id, 'Ситуация создана!')
             except Exception:
-                warn_invalid_args(chat.id)
+                TeleBot.send_message(chat.id, str(e))
     except Exception as e:
         TeleBot.send_message(chat.id, str(e))
 
