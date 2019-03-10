@@ -497,6 +497,7 @@ def message_handler(message):
         if text.startswith('/new_situation'):
             args = text[13:].split('_')
             try:
+                TeleBot.send_message(chat.id, str(args))
                 name = args[0]
                 danger = int(args[1])
                 sit_len = int(args[2])
