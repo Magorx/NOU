@@ -475,6 +475,10 @@ class User:
 @TeleBot.message_handler(func=lambda x: True)
 def message_handler(message):
     try:
+        for sit in SITUATIONS:
+            sit.check()
+
+            
         if TO_STOP:
             print('ok')
             exit(0)
@@ -494,7 +498,7 @@ def message_handler(message):
                                           'помощь - по /commands_help')
             USERS[chat.id] = User(chat.id, chat.first_name)
 
-        # /new_situation_NOU_10_60_1_1_help!\nresqueme!\n
+        # /new_situation_NOU_10_60_10_5_help!\nresqueme!\n
         if text.startswith('/new_situation'):
             args = text[15:].split('_')
             try:
