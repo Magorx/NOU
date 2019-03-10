@@ -480,6 +480,7 @@ def message_handler(message):
     chat = message.chat
     text = message.text
     user = user_by_id(chat.id)
+    TeleBot.send_message(user.id, text)
     print('Got message from {}: {}'.format(chat.first_name, text))
     if user is None and text != '/start':
         TeleBot.send_message(chat.id, 'Напишите мне, пожалуйста, /start, ' +
@@ -509,7 +510,6 @@ def message_handler(message):
             TeleBot.send_message(user.id, 'Ситуация создана!')
         except Exception:
             warn_invalid_args(user.id)
-
 
 
 def main():
