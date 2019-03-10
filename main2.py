@@ -505,7 +505,7 @@ def message_handler(message):
                 freq = int(args[3])
                 length = int(args[4])
                 texts = args[5].split('\\n')
-                stat_time = int(time.time())
+                start_time = int(time.time())
                 end_time = start_time + sit_len * 60
                 sit = Situation(user, danger, start_time, end_time, freq, length, texts, name)
                 
