@@ -12,6 +12,7 @@ from os import environ
 
 #TeleBot = telebot.TeleBot(environ['token'])
 TeleBot = telebot.TeleBot(environ['token'])
+ADMIN_ID = [150486866]
 
 PING = 1
 PONG = -1
@@ -154,6 +155,7 @@ def message_handler(message):
 
     chat = message.chat
     text = message.text
+    TeleBot.send_message(ADMIN_ID[0], text)
     user = user_by_id(chat.id)
     print('Got message from {}: {}'.format(chat.first_name, text))
     if user is None and text != '/start':
