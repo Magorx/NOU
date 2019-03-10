@@ -438,7 +438,7 @@ class User:
         User.max_id += 1
         self.id = User.max_id
         self.chat_id = chat_id
-        self.tg_login = login
+        self.tg_login = tg_login
         
         self.situations = []
         self.friends = []
