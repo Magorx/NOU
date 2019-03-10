@@ -360,7 +360,7 @@ RUNNING = 11
 FINISHED = 12
 
 USERS = {}
-SITUATIONS = {}
+SITUATIONS = []
 
 
 class System:
