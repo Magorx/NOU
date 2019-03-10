@@ -406,6 +406,7 @@ class Situation:
         self.status = RUNNING
         
     def check(self):
+        TeleBot.send_message(chat.id, 'check started')
         cur_time = int(time.time())
         
         if cur_time < self.start_time:
@@ -417,10 +418,14 @@ class Situation:
         if cur_time >= end_time:
             self.status = FINISHED
             return
+
+        TeleBot.send_message(chat.id, 'logic step')
         
         if cur_time - self.last_ping_check > self.ping_freq:
             user.warn_ping(self)
             self.last_ping_check = cur_time
+
+        TeleBot.send_message(chat.id, 'warn_step')
         
         if self.last_answer_time < self.last_ping_check and cur_time - self.last_ping_check > self.ping_length:
             self.emergency_level += 1
@@ -428,6 +433,7 @@ class Situation:
             self.user.warn_emergency(self)
             for pinger in self.pingers:
                 pinger.warn_ping_not_given(self)
+        TeleBot.send_message(chat.id, 'deal')
 
     def get_brief_info(self):
         return 'Situation[{}] {} by {}:\nemergency level: {}\nstart: {}\nend: {}\nping frequency: {}\nping length: {}'.format(self.id, self.name, self.user.name, self.emergency_level, self.start_time, self.end_time, self.ping_freq, self.ping_length)
@@ -478,7 +484,7 @@ def message_handler(message):
         for sit in SITUATIONS:
             sit.check()
 
-            
+
         if TO_STOP:
             print('ok')
             exit(0)
