@@ -140,13 +140,6 @@ def user_by_id(user_id):
 
 def warn_invalid_args(chat_id):
     TeleBot.send_message(chat_id, 'Некоректные аргументы')
-    
-
-def register_user(user, chat):
-    if not user is None:
-        return 0
-    else:
-        USERS[chat.id] = User(char.id, chat.first_name)
 
 
 @TeleBot.message_handler(func=lambda x: True)
@@ -195,6 +188,8 @@ def message_handler(message):
 def main():
     global USERS
     USERS = {}
+    while True:
+        msg = input()
     TeleBot.polling(interval=1)
 
 
