@@ -482,6 +482,23 @@ x = 0
 @TeleBot.message_handler(func=lambda x: True)
 def message_handler(message):
     try:
+        if TO_STOP:
+            print('ok')
+            exit(0)
+
+        chat = message.chat
+        text = message.text
+        user = user_by_id(chat.id)
+        print('Got message from {}: {}'.format(chat.first_name, text))
+        if user is None and text != '/start':
+            TeleBot.send_message(chat.id, 'Напишите мне, пожалуйста, /start, ' +
+                                 'чтобы я добавил вас в список пользователей')
+            return 0
+
+        if text == '/start':
+            TeleBot.send_message(chat.id, 'Привет. Правила доступны по /rules, ' +
+                                          'помощь - по /commands_help')
+            USERS[chat.id] = User(chat.id, chat.first_name)
         arr = ['Приветствую в системе!',
                'Создаем новую ситуацию. Введите предполагаемый уровень опасности (1-10)', 
                'Название ситуации', 
