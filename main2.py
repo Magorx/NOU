@@ -477,52 +477,27 @@ class User:
         else:
             TeleBot.send_message(pinger.chat_id, situation.emergency_texts[situation.emergency_level])
 
+x = 0
 
 @TeleBot.message_handler(func=lambda x: True)
 def message_handler(message):
     try:
-        for sit in SITUATIONS:
-            sit.check()
+        arr = ['Приветствую в системе!',
+               'Создаем новую ситуацию. Введите предполагаемый уровень опасности (1-10)', 
+               'Название ситуации', 
+               'Время начала ситуации в формате hh:mm', 
+               'Вемя конца ситуации в формате hh:mm', 
+               'Длительность промежутка между проверками (в минутах)', 
+               'Длительность одной проверки',
+               'Через перевод строки введите тексты, которые будут посылаться наблюдателям в случае пропуска проверки'
+               'Пользователь Максим Горишний в событии Научное Общество Учащихся в опасности! 1 пропуск проверки!',
+               'Геолокация пользователя: Лицей 8',
+               'У меня не закончен интерфейс, помогите!',
+               'Пользователь Максим Горишний в событии Научное Общество Учащихся в опасности! 2 пропуск проверки!',
+               'У меня все еще не закончен интерфейс, помогите!']
+        TeleBot.send_message(message.chat.id, arr[x])
+        x += 1
 
-
-        if TO_STOP:
-            print('ok')
-            exit(0)
-
-        chat = message.chat
-        text = message.text
-        user = user_by_id(chat.id)
-        TeleBot.send_message(chat.id, text)
-        print('Got message from {}: {}'.format(chat.first_name, text))
-        if user is None and text != '/start':
-            TeleBot.send_message(chat.id, 'Напишите мне, пожалуйста, /start, ' +
-                                 'чтобы я добавил вас в список пользователей')
-            return 0
-
-        if text == '/start':
-            TeleBot.send_message(chat.id, 'Привет. Правила доступны по /rules, ' +
-                                          'помощь - по /commands_help')
-            USERS[chat.id] = User(chat.id, chat.first_name)
-
-        # /new_situation_NOU_10_60_10_5_help!\nresqueme!\n
-        if text.startswith('/new_situation'):
-            args = text[15:].split('_')
-            try:
-                TeleBot.send_message(chat.id, str(args))
-                name = args[0]
-                danger = int(args[1])
-                sit_len = int(args[2])
-                freq = int(args[3])
-                length = int(args[4])
-                texts = args[5].split('\\n')
-                start_time = int(time.time())
-                end_time = start_time + sit_len * 60
-                sit = Situation(user, danger, start_time, end_time, freq, length, texts, name)
-                
-                SITUATIONS.append(sit)
-                TeleBot.send_message(chat.id, 'Ситуация создана!')
-            except Exception as e:
-                TeleBot.send_message(chat.id, str(e))
     except Exception as e:
         TeleBot.send_message(chat.id, str(e))
 
