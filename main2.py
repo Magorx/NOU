@@ -482,7 +482,8 @@ x = 0
 @TeleBot.message_handler(func=lambda x: True)
 def message_handler(message):
     try:
-        if TO_STOP:
+        global x
+        '''if TO_STOP:
             print('ok')
             exit(0)
 
@@ -498,7 +499,7 @@ def message_handler(message):
         if text == '/start':
             TeleBot.send_message(chat.id, 'Привет. Правила доступны по /rules, ' +
                                           'помощь - по /commands_help')
-            USERS[chat.id] = User(chat.id, chat.first_name)
+            USERS[chat.id] = User(chat.id, chat.first_name)'''
         arr = ['Приветствую в системе!',
                'Создаем новую ситуацию. Введите предполагаемый уровень опасности (1-10)', 
                'Название ситуации', 
