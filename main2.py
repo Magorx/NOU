@@ -6,10 +6,9 @@ from random import randint, choice
 from time import sleep
 import telebot
 import time
-from os import environ
 
 
-TeleBot = telebot.TeleBot(environ['token'])
+TeleBot = telebot.TeleBot('779667318:AAFO_3Ptkf2Y7uYstagrckMrBqpt9criQEo')
 ADMIN_ID = [150486866]
 
 TO_STOP = False

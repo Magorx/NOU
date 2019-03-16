@@ -3,8 +3,12 @@
 
 
 class Interface:
-    def __init__(self, name):
+    def __init__(self, platform, name):
+        self.platform = platform
         self.name = name
+
+    def register(self, user):
+        pass # that method must be writen
 
     def send_msg(self, user, text):
         pass # that method must be writen
