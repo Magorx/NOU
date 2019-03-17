@@ -42,8 +42,9 @@ class Pingponger:
                 return sit
         return None
 
-    def handle_message(self, message):
-        pass
+    def check_situations(self):
+        for sit in self.situations:
+            sit.check()
 
     def text_dump(self):
         print(self.situations)

@@ -6,6 +6,7 @@ from threading import Thread
 import Pingponger
 import Tg_interface
 import telebot
+import time
 
 
 PP = Pingponger.Pingponger(6319)
@@ -15,7 +16,6 @@ bot = telebot.TeleBot(token)
 
 @bot.message_handler(func=lambda x: True)
 def recieve_message(message):
-    PP.text_dump()
     PP.interfaces['telegram'].handle(message)
 
 
@@ -25,6 +25,15 @@ def launch_tg_bot(bot):
     print('Telegram bot shut down')
 
 
+def everysecond_check():
+    t = 0
+    while True:
+        t += 1
+        if t % 10 == 0:
+            print('Checking is OK.')
+        PP.check_situations()
+        time.sleep(1)
+
 
 def main():
     global PP
@@ -33,6 +42,9 @@ def main():
 
     tg_bot_thread = Thread(target=launch_tg_bot, args=(bot,))
     tg_bot_thread.start()
+
+    everysecond_check_thread = Thread(target=everysecond_check)
+    everysecond_check_thread.start()
 
 
 if __name__ == "__main__":

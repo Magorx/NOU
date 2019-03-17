@@ -24,9 +24,9 @@ class Interface:
         self.send_msg(user, text)
 
     def warn_ping_time(self, user, situation):
-        text = 'Ping time for {}!'.format(self.name)
+        text = '/ping time for {}!\n/pong'.format(self.name)
 
-        self.send_msg(self, user, text)
+        self.send_msg(user, text)
 
     def warn_ping_not_given(self, user, situation):
         text = 'Person is having trouble in {}!'.format(self.name)

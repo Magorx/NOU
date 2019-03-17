@@ -40,7 +40,7 @@ class TgBot(Interface.Interface):
                     new_sit.update_link()
                     self.send_msg(user, 'Введите степень опасности (от 1 до 10)')
                     user.creating_situation += 1
-                elif stage == 10:
+                elif stage == 2:
                     new_sit.danger_status = int(text)
                     self.send_msg(user, 'Введите время до ситуации в формате hh:mm')
                     user.creating_situation += 1
@@ -74,11 +74,12 @@ class TgBot(Interface.Interface):
                     new_sit.emergency_texts = text.split('\n')
                     self.send_msg(user, 'Проверьте все введенные данные. Подтверждаете создание ситуации? (Ответьте "Да" без кавычек)')
                     user.creating_situation += 1
-                elif stage == 2:
+                elif stage == 8:
                     if text.lower() == 'да':
+                        new_sit.creating_interface = self
+                        self.platform.add_situation(new_sit)
                         answer = 'Ситуация создана. Ссылка на присоединение:\n/join_' + new_sit.link
                         self.send_msg(user, answer)
-                        self.platform.add_situation(new_sit)
                     else:
                         answer = 'Создание ситуации отменено'
                         self.send_msg(user, answer)
@@ -108,3 +109,11 @@ class TgBot(Interface.Interface):
                         self.send_msg(user, 'Вы успешно подключились к ситуации' + sit.name)
                     else:
                         self.send_msg(user, 'Вы уже подключены к ситуации' + sit.name)
+            
+            elif text == '/extra':
+                t = int(time.time())
+                sit = Situation.Situation(user, 10, t, t + 60 * 60, 15, 10, ['This is emergency!'] * 5, creating_interface=self)
+                self.platform.add_situation(sit)
+
+            elif text == '/pong':
+                user.checked()

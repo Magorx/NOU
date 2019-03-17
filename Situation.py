@@ -14,7 +14,7 @@ FINISHED = 12
 class Situation:
     max_id = -1
 
-    def __init__(self, user, danger_status=1, start_time=0, end_time=0, ping_freq=1, ping_length=0, emergency_texts=[], name='NoName'):
+    def __init__(self, user, danger_status=1, start_time=0, end_time=0, ping_freq=1, ping_length=0, emergency_texts=[], name='NoName', creating_interface=None):
         Situation.max_id += 1
         self.id = Situation.max_id
 
@@ -38,6 +38,7 @@ class Situation:
         self.name = name
         self.status = NOT_STARTED
         self.update_link()
+        self.creating_interface = creating_interface
 
     def update_link(self):
         self.link = str(self.id) + '_' + self.name
@@ -46,7 +47,6 @@ class Situation:
         self.pingers.append(user)
         
     def check(self):
-        TeleBot.send_message(chat.id, 'check started')
         cur_time = int(time.time())
         
         if cur_time < self.start_time and not self.status == RUNNING:
@@ -55,12 +55,12 @@ class Situation:
         if self.status == FINISHED:
             return
 
-        if cur_time >= end_time:
+        if cur_time >= self.end_time:
             self.status = FINISHED
             return
         
         if cur_time - self.last_ping_check > self.ping_freq:
-            user.warn_ping(self)
+            self.creating_interface.warn_ping_time(self.user, self)
             self.last_ping_check = cur_time
 
         if self.last_answer_time < self.last_ping_check and cur_time - self.last_ping_check > self.ping_length:
