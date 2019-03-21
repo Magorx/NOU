@@ -1,0 +1,33 @@
+Starting telegram bot
+Exception ignored in: <module 'threading' from '/usr/lib/python3.6/threading.py'>
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/threading.py", line 1294, in _shutdown
+    t.join()
+  File "/usr/lib/python3.6/threading.py", line 1056, in join
+    self._wait_for_tstate_lock()
+  File "/usr/lib/python3.6/threading.py", line 1072, in _wait_for_tstate_lock
+    elif lock.acquire(block, timeout):
+KeyboardInterrupt
+Msg recieved: /extra
+1553182663 1553182663 1553182664 4
+1553182663 1553182663 1553182665 4
+1553182663 1553182663 1553182666 4
+1553182663 1553182663 1553182667 4
+1553182663 1553182663 1553182668 4
+1553182669 1553182669 1553182669 4
+1553182669 1553182669 1553182670 4
+Checking is OK.
+1553182669 1553182669 1553182671 4
+1553182669 1553182669 1553182672 4
+1553182669 1553182669 1553182673 4
+1553182669 1553182669 1553182674 4
+1553182675 1553182675 1553182675 4
+1553182675 1553182675 1553182676 4
+1553182675 1553182675 1553182677 4
+Msg recieved: /pong
+[<Situation.Situation object at 0x7f956bcaef28>]
+sit[NoName] ponged
+1553182678 1553182675 1553182678 4
+1553182678 1553182675 1553182679 4
+Starting telegram bot
+Starting telegram bot

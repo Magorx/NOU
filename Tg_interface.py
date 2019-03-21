@@ -29,6 +29,7 @@ class TgBot(Interface.Interface):
         user = self.platform.user_by_tg_chat_id(chat.id)
         
         if user.creating_situation:
+            print('pew')
             if text == '/cancel':
                 self.send_msg(user, 'Создание ситуации отменено')
                 user.creating_situation = 0
@@ -76,8 +77,9 @@ class TgBot(Interface.Interface):
                     user.creating_situation += 1
                 elif stage == 8:
                     if text.lower() == 'да':
-                        new_sit.creating_interface = self
+                        new_sit.interface = self
                         self.platform.add_situation(new_sit)
+                        user.created_situation(sit)
                         answer = 'Ситуация создана. Ссылка на присоединение:\n/join_' + new_sit.link
                         self.send_msg(user, answer)
                     else:
@@ -89,8 +91,8 @@ class TgBot(Interface.Interface):
                 self.send_msg(user, 'Неверно введены данные, повторите попытку')
                 print(e)
         else:
-            if message == '/start':
-                self.send_msg(user, 'Добро пожаловать в PingPongEr!')
+            if text == '/start':
+                self.send_msg(user, 'Добро пожаловать в Pingponger!')
 
             elif text == '/new_situation':
                 user.creating_situation = 1
@@ -99,21 +101,22 @@ class TgBot(Interface.Interface):
 
             elif text.startswith('/join_'):
                 link = text[6:]
-                id = int(text.split('_')[0])
+                id = int(link.split('_')[0])
                 sit = self.platform.situation_by_id(id)
                 if sit is None:
                     self.send_msg(user, 'Несуществующая или окончившаяся ситуация')
                 else:
                     ret = user.join_situation(sit)
                     if ret:
-                        self.send_msg(user, 'Вы успешно подключились к ситуации' + sit.name)
+                        self.send_msg(user, 'Вы успешно подключились к ситуации ' + sit.name)
                     else:
-                        self.send_msg(user, 'Вы уже подключены к ситуации' + sit.name)
+                        self.send_msg(user, 'Вы уже подключены к ситуации ' + sit.name)
             
             elif text == '/extra':
-                t = int(time.time())
-                sit = Situation.Situation(user, 10, t, t + 60 * 60, 15, 10, ['This is emergency!'] * 5, creating_interface=self)
+                sit = Situation.create_emergency_situation(user, self)
                 self.platform.add_situation(sit)
+                self.send_msg(user, sit.get_brief_info())
+                self.send_msg(user, '/join_' + sit.link)
 
             elif text == '/pong':
-                user.checked()
+                user.ponged()

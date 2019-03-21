@@ -17,6 +17,7 @@ class User:
             self.add_interface(key, interface_ids_dict[key])
 
         self.situations = []
+        self.own_situations = []
 
         self.creating_situation = 0
         self.new_situation = Situation.Situation(self)
@@ -34,7 +35,12 @@ class User:
 
         return True
 
-    def checked(self):
-        for sit in self.situations:
+    def created_situation(self, sit):
+        self.own_situations.append(sit)
+
+    def ponged(self):
+        print(self.own_situations)
+        for sit in self.own_situations:
             if sit.status == Situation.RUNNING:
-                sit.last_user_answer_time = int(time.time())
+                print('sit[{}] ponged'.format(sit.name))
+                sit.ponged()
