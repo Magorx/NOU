@@ -4,6 +4,7 @@
 
 import Interface
 import Situation
+import Sistem
 import time
 import telebot
 
@@ -29,7 +30,6 @@ class TgBot(Interface.Interface):
         user = self.platform.user_by_tg_chat_id(chat.id)
         
         if user.creating_situation:
-            print('pew')
             if text == '/cancel':
                 self.send_msg(user, 'Создание ситуации отменено')
                 user.creating_situation = 0
@@ -79,29 +79,66 @@ class TgBot(Interface.Interface):
                     if text.lower() == 'да':
                         new_sit.interface = self
                         self.platform.add_situation(new_sit)
-                        user.created_situation(sit)
-                        answer = 'Ситуация создана. Ссылка на присоединение:\n/join_' + new_sit.link
-                        self.send_msg(user, answer)
+                        new_sit.update_link()
+                        answer = 'Ситуация создана. Ссылка на присоединение:\n{}{}'.format(Situation.JOIN_COMMAND_PREFIX, new_sit.link)
                     else:
                         answer = 'Создание ситуации отменено'
-                        self.send_msg(user, answer)
+                    self.send_msg(user, answer)
                     user.new_situation = Situation.Situation(user)
                     user.creating_situation = 0
             except Exception as e:
                 self.send_msg(user, 'Неверно введены данные, повторите попытку')
-                print(e)
+                print(e, '| in creating Situation, text = ' + text)
+
+        elif user.creating_sistem:
+            if text == '/cancel':
+                self.send_msg(user, 'Создание системы отменено')
+                user.creating_situation = 0
+            else:
+                try:
+                    stage = user.creating_situation
+                    new_sis = user.new_sistem
+                    if stage == 1:
+                        new_sis.name = text
+                        user.creating_sistem += 1
+                        self.send_msg(user, 'Введите максимальное число пользователей в системе')
+                    if stage == 2:
+                        new_sis.max_user_count = int(text)
+                        user.creating_sistem += 1
+                        self.send_msg(user, 'Проверьте все введенные данные. Подтверждаете создание ситуации? (Ответьте "Да" без кавычек)')
+                    if stage == 3:
+                        if text.lower() == 'да':
+                            self.platform.add_sistem(new_sis)
+                            new_sit.update_link()
+                            answer = 'Система создана. Ссылка на присоединение:\n{}{}'.format(Sistem.JOIN_COMMAND_PREFIX, new_sis.link)
+                        else:
+                            answer = 'Создание системы отменено'
+                        self.send_msg(user, answer)
+                        user.new_sistem = Sistem.Sistem(user)
+                        user.creating_sistem = 0
+
+                except Exception as e:
+                    self.send_msg(user, 'Неверно введены данные, повторите попытку')
+                    print(e, '| in creating Sistem, text = ' + text)
+
         else:
             if text == '/start':
                 self.send_msg(user, 'Добро пожаловать в Pingponger!')
 
-            elif text == '/new_situation':
+            elif text == Situation.CREATION_COMMAND:
                 user.creating_situation = 1
                 self.send_msg(user, 'Начинаем создание новой ситуации')
                 self.send_msg(user, 'Введите название ситуации')
 
-            elif text.startswith('/join_'):
-                link = text[6:]
+            elif text == Sistem.CREATION_COMMAND:
+                user.creating_sistem = 1
+                self.send_msg(user, 'Начинаем создание новой системы')
+                self.send_msg(user, 'Введите название системы')
+
+            elif text.startswith(Situation.JOIN_COMMAND_PREFIX):
+                link = text[len(Situation.JOIN_COMMAND_PREFIX) + 1:]
                 id = int(link.split('_')[0])
+
                 sit = self.platform.situation_by_id(id)
                 if sit is None:
                     self.send_msg(user, 'Несуществующая или окончившаяся ситуация')
@@ -111,12 +148,27 @@ class TgBot(Interface.Interface):
                         self.send_msg(user, 'Вы успешно подключились к ситуации ' + sit.name)
                     else:
                         self.send_msg(user, 'Вы уже подключены к ситуации ' + sit.name)
+
+            elif text.startswith(Sistem.JOIN_COMMAND_PREFIX):
+                link = text[len(Situation.JOIN_COMMAND_PREFIX) + 1:]
+                id = int(link.split('_')[0])
+
+                sis = self.platform.sistem_by_id(id)
+                if sis is None:
+                    self.send_msg(user, 'Несуществующая система')
+                else:
+                    ret = sis.add_user(user)
+                    if ret:
+                        self.send_msg(user, 'Вы удачно подключились к системе {}'.format(sis.name))
+                    else:
+                        self.send_msg(user, 'В системе достигнуто максимальное количество пользователей')
+
             
             elif text == '/extra':
                 sit = Situation.create_emergency_situation(user, self)
                 self.platform.add_situation(sit)
                 self.send_msg(user, sit.get_brief_info())
-                self.send_msg(user, '/join_' + sit.link)
+                self.send_msg(user, Situation.JOIN_COMMAND_PREFIX + sit.link)
 
             elif text == '/pong':
                 user.ponged()

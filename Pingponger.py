@@ -17,6 +17,9 @@ class Pingponger:
         self.situations = []
         # todo - importing situations from databse
 
+        self.sistems = []
+        # todo - importing sistems from databse        
+
     def add_interface(self, key, interface):
         self.interfaces[key] = interface
 
@@ -26,6 +29,10 @@ class Pingponger:
 
     def add_situation(self, situation):
         self.situations.append(situation)
+        situation.user.created_situation(sit)
+
+    def add_sistem(self, sistem):
+        self.sistems.append(sistem)
     
     def init_situation_creation(self, user):
         pass
@@ -40,6 +47,12 @@ class Pingponger:
         for sit in self.situations:
             if sit.id == id and sit.status != Situation.FINISHED:
                 return sit
+        return None
+
+    def sistem_by_id(self, id):
+        for sis in self.sistems:
+            if sis.id == id:
+                return sis
         return None
 
     def check_situations(self):

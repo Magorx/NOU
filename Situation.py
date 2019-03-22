@@ -11,6 +11,10 @@ RUNNING = 11
 FINISHED = 12
 
 
+JOIN_COMMAND_PREFIX = '/joinsit_'
+CREATION_COMMAND = '/newsit'
+
+
 class Situation:
     max_id = -1
 

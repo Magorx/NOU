@@ -30,13 +30,14 @@ def everysecond_check():
     while True:
         t += 1
         if t % 10 == 0:
-            print('Checking is OK.')
+            print('[{}]Checking is OK.'.format(int(time.time())))
         PP.check_situations()
         time.sleep(1)
 
 
 def main():
     global PP
+    print('Starting PingPonger, current time = {}'.format(int(time.time())))
 
     PP.add_interface('telegram', Tg_interface.TgBot(PP, 'TgBot', bot))
 

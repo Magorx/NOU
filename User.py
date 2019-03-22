@@ -4,6 +4,7 @@
 
 import time
 import Situation
+import Sistem
 
 
 class User:
@@ -22,6 +23,11 @@ class User:
         self.creating_situation = 0
         self.new_situation = Situation.Situation(self)
 
+        self.creating_sistem = 0
+        self.new_sistem = Sistem.Sistem(self)
+
+        self.sistems = []
+        self.muted = []
 
     def add_interface(self, key, value):
         self.__dict__[key] = value
@@ -35,8 +41,15 @@ class User:
 
         return True
 
-    def created_situation(self, sit):
-        self.own_situations.append(sit)
+    def created_situation(self, situation):
+        self.own_situations.append(situation)
+        for sis in self.sistems:
+            if not sis in self.muted:
+                sis.add_situation(situation)
+
+    def join_sistem(self, sistem):
+        sistem.add_user(self)
+        self.sistems.append(sistem)
 
     def ponged(self):
         print(self.own_situations)
@@ -44,3 +57,11 @@ class User:
             if sit.status == Situation.RUNNING:
                 print('sit[{}] ponged'.format(sit.name))
                 sit.ponged()
+
+    def get_sistem_list(self):
+        text = ''
+        for i in range(len(self.sistems)):
+            sis = self.sistems[i]
+            text += '{}) \n'.format(sis.name)
+        text = text[:-1]
+        return text
