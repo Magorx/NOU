@@ -32,16 +32,25 @@ class User:
     def add_interface(self, key, value):
         self.__dict__[key] = value
 
-    def join_situation(self, situation):
+    def connect_situation(self, situation):
         if self in situation.pingers:
             return False
 
-        situation.add_pinger(self)
+        situation.connect_pinger(self)
         self.situations.append(situation)
 
         return True
 
+    def disconnect_situation(self, situation):
+        for i in range(len(self.situations)):
+            sit = self.situations[i]
+            if sit == situation:
+                sit.disconnect_pinger(self)
+                del self.situations[i]
+
+
     def created_situation(self, situation):
+        print(self.own_situations)
         self.own_situations.append(situation)
         for sis in self.sistems:
             if not sis in self.muted:
@@ -52,7 +61,6 @@ class User:
         self.sistems.append(sistem)
 
     def ponged(self):
-        print(self.own_situations)
         for sit in self.own_situations:
             if sit.status == Situation.RUNNING:
                 print('sit[{}] ponged'.format(sit.name))

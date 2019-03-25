@@ -29,10 +29,17 @@ class Pingponger:
 
     def add_situation(self, situation):
         self.situations.append(situation)
-        situation.user.created_situation(sit)
+        situation.user.created_situation(situation)
 
     def add_sistem(self, sistem):
         self.sistems.append(sistem)
+
+    def remove_situation(self, situation):
+        for i in range(len(self.situations)):
+            sit = self.situations[i]
+            if sit == situation:
+                sit.delete()
+                del self.situations[i]
     
     def init_situation_creation(self, user):
         pass

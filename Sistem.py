@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 
-JOIN_COMMAND_PREFIX = '/joinsis_'
-CREATION_COMMAND = '/newsis'
+COMMAND_JOIN = '/joinsis_'
+COMMAND_CREATION = '/newsis'
+COMMAND_DELETE = '/delsis_'
 
 
 class Sistem:
@@ -34,6 +35,9 @@ class Sistem:
 
     def add_situation(self, situation):
         sit = situation
+        if sit in self.situations:
+            return
+
         self.situations.append(sit)
 
         for usr in self.users:
