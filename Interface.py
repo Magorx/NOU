@@ -4,6 +4,7 @@
 
 import Situation
 import Sistem
+import time
 
 
 class Interface:
@@ -121,7 +122,7 @@ class Interface:
         elif user.creating_sistem:
             if text == '/cancel':
                 self.send_msg(user, 'Создание системы отменено')
-                user.creating_situation = 0
+                user.creating_sistem = 0
             
             try:
                 stage = user.creating_sistem
@@ -158,11 +159,6 @@ class Interface:
                 self.send_msg(user, 'Начинаем создание новой ситуации')
                 self.send_msg(user, 'Введите название ситуации')
 
-            elif text == Sistem.COMMAND_CREATION:
-                user.creating_sistem = 1
-                self.send_msg(user, 'Начинаем создание новой системы')
-                self.send_msg(user, 'Введите название системы')
-
             elif text.startswith(Situation.COMMAND_JOIN):
                 link = text[len(Situation.COMMAND_JOIN):]
                 id = int(link.split('_')[0])
@@ -171,17 +167,34 @@ class Interface:
                 if sit is None:
                     self.send_msg(user, 'Несуществующая или окончившаяся ситуация')
                 else:
-                    ret = user.connect_situation(sit)
+                    ret = user.add_situation(sit)
                     if ret:
                         self.send_msg(user, 'Вы успешно подключились к ситуации ' + sit.name)
                     else:
                         self.send_msg(user, 'Вы уже подключены к ситуации ' + sit.name)
 
+            elif text.startswith(Situation.COMMAND_DELETE):
+                link = text[len(Situation.COMMAND_DELETE):]
+                id = int(link.split('_')[0])
+
+                sit = self.platform.situation_by_id(id)
+                if sit is None:
+                    self.send_msg(user, 'Несуществующая ситуация')
+                else:
+                    self.platform.remove_situation(sit)
+                    self.send_msg(user, 'Ситуация {} удалена'.format(sit.name))
+
+            elif text == Sistem.COMMAND_CREATION:
+                user.creating_sistem = 1
+                self.send_msg(user, 'Начинаем создание новой системы')
+                self.send_msg(user, 'Введите название системы')
+
             elif text.startswith(Sistem.COMMAND_JOIN):
-                link = text[len(Situation.COMMAND_JOIN):]
+                link = text[len(Sistem.COMMAND_JOIN):]
                 id = int(link.split('_')[0])
 
                 sis = self.platform.sistem_by_id(id)
+                print(sis, user.sistems)
                 if sis is None:
                     self.send_msg(user, 'Несуществующая система')
                 else:
@@ -191,16 +204,16 @@ class Interface:
                     else:
                         self.send_msg(user, 'В системе достигнуто максимальное количество пользователей')
 
-            elif text.startswith(Situation.COMMAND_DELETE):
-                link = text[len(Situation.COMMAND_DELETE):]
+            elif text.startswith(Sistem.COMMAND_DELETE):
+                link = text[len(Sistem.COMMAND_DELETE):]
                 id = int(link.split('_')[0])
 
-                sit = self.platform.situation_by_id(id)
-                if sit is None:
+                sis = self.platform.situation_by_id(id)
+                if sis is None:
                     self.send_msg(user, 'Несуществующая система')
                 else:
-                    self.platform.remove_situation(sit)
-                    self.send_msg(user, 'Ситуация {} удалена'.format(sit.name))
+                    self.platform.remove_sistem(sis)
+                    self.send_msg(user, 'Ситуация {} удалена'.format(sis.name))
             
             elif text == '/extra':
                 sit = Situation.create_emergency_situation(user, self)

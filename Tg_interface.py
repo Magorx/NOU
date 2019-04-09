@@ -27,3 +27,4 @@ class TgBot(Interface.Interface):
         user = self.platform.user_by_tg_chat_id(chat.id)
         
         self.handle_text(user, text)
+        

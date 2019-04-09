@@ -4,6 +4,7 @@
 
 import User
 import Situation
+import pickle
 
 
 class Pingponger:
@@ -18,7 +19,33 @@ class Pingponger:
         # todo - importing situations from databse
 
         self.sistems = []
-        # todo - importing sistems from databse        
+        # todo - importing sistems from databse
+
+    def load_from_dump(self, filename):
+        try:
+            f = open(filename, 'rb')
+        except Exception:
+            return
+
+        return pickle.load(f)
+
+    def dump_interfaces(self):
+        reversed_interface_dict = {}
+        for key in self.interfaces:
+            reversed_interface_dict[self.interfaces[key]] = key
+        
+        for sit in self.situations:
+            sit.interface = reversed_interface_dict[sit.interface]
+        
+        ret = self.interfaces
+        self.interfaces = {}
+        return ret
+
+    def load_interfaces(self, interfaces):
+        self.interfaces = interfaces
+
+        for sit in self.situations:
+            sit.interface = self.interfaces[sit.interface]
 
     def add_interface(self, key, interface):
         self.interfaces[key] = interface
@@ -29,7 +56,14 @@ class Pingponger:
 
     def add_situation(self, situation):
         self.situations.append(situation)
-        situation.user.created_situation(situation)
+
+        usr = situation.user
+        print(usr.sistems)
+        for sis in usr.sistems:
+            if not sis in usr.muted:
+                sis.add_situation(situation)
+        
+        usr.created_situation(situation)
 
     def add_sistem(self, sistem):
         self.sistems.append(sistem)

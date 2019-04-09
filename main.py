@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3  
 # -*- coding: utf-8 -*-
 
 
@@ -7,11 +7,15 @@ import Pingponger
 import Tg_interface
 import telebot
 import time
+import pickle
 
 
 PP = Pingponger.Pingponger(6319)
 token = '779667318:AAFO_3Ptkf2Y7uYstagrckMrBqpt9criQEo'
 bot = telebot.TeleBot(token)
+
+
+DUMP_FILE = 'pp.txt'
 
 
 @bot.message_handler(func=lambda x: True)
@@ -29,17 +33,31 @@ def everysecond_check():
     t = 0
     while True:
         t += 1
-        if t % 10 == 0:
+        if t % 5 == 2:
             print('[{}]Checking is OK.'.format(int(time.time())))
+            print(len(PP.situations))
+            f = open(DUMP_FILE, 'wb')
+            interfaces = PP.dump_interfaces()
+            pickle.dump(PP, f)
+            PP.load_interfaces(interfaces)
+            f.close()
+
         PP.check_situations()
         time.sleep(1)
 
 
 def main():
     global PP
+    global INTERFACES
+    INTERFACES = {}
+    PP = PP.load_from_dump(DUMP_FILE)
     print('Starting PingPonger, current time = {}'.format(int(time.time())))
 
-    PP.add_interface('telegram', Tg_interface.TgBot(PP, 'TgBot', bot))
+
+    TG_INTERFACE_OBJECT = Tg_interface.TgBot(PP, 'TgBot', bot)
+    INTERFACES['telegram'] = TG_INTERFACE_OBJECT
+
+    PP.load_interfaces(INTERFACES)
 
     tg_bot_thread = Thread(target=launch_tg_bot, args=(bot,))
     tg_bot_thread.start()

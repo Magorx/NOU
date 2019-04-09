@@ -96,7 +96,7 @@ class Situation:
 
     def delete(self):
         for pinger in self.pingers:
-            pinger.disconnect_situation(self)
+            pinger.remove_situation(self)
 
     def get_brief_info(self):
         return 'Situation[{}] {} by {}:\nemergency level: {}\nstart: {}\nend: {}\nping frequency: {}\nping length: {}'.format(self.id, self.name, self.user.name, self.emergency_level, self.start_time, self.end_time, self.ping_freq, self.ping_length)

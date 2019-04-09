@@ -8,7 +8,7 @@ COMMAND_DELETE = '/delsis_'
 
 
 class Sistem:
-    max_id = -1
+    max_id = 0
     def __init__(self, creator, max_user_count=0, name='NoName'):
         Sistem.max_id += 1
         self.id = Sistem.max_id
@@ -31,7 +31,13 @@ class Sistem:
             return False
         else:
             self.users.append(user)
+            user.join_sistem(self)
             return True
+
+    def remove_user(self, user):
+        for i in range(len(self.users)):
+            if self.users[i] == user:
+                del self.users[i]
 
     def add_situation(self, situation):
         sit = situation
@@ -42,7 +48,11 @@ class Sistem:
 
         for usr in self.users:
             if not self in usr.muted:
-                usr.warn_new_situation(usr, sit)
+                situation.interface.warn_new_situation(usr, sit)
+
+    def delete(self):
+        for user in self.users:
+            user.exit_sistem(self)
 
     def add_sistem(self, sistem):
         self.sistem.append(sistem)
