@@ -186,6 +186,27 @@ class Interface:
                         self.platform.remove_situation(sit)
                         self.send_msg(user, 'Ситуация {} удалена'.format(sit.name))
 
+                elif text == Situation.COMMAND_LIST:
+                    ans = 'Ситуации, в которых вы наблюдатель:'
+                    for i in range(len(user.situations)):
+                        sit = user.situations[i]
+                        if sit.end_time > int(time.time()):
+                            ans = ans + '\n' + '{}) {}'.format(i + 1, sit.name)
+
+                    ans += '\n\n' + 'Ситуации, созданный вами:'
+                    for i in range(len(user.own_situations)):
+                        sit = user.own_situations[i]
+                        if sit.end_time > int(time.time()):
+                            ans = ans + '\n' + '{}) {}_{}'.format(i + 1, sit.id, sit.name)
+
+                elif text == Sistem.COMMAND_LIST:
+                    ans = 'Системы, в которых вы состоите:'
+                    for i in range(len(user.sistems)):
+                        sis = user.sistems[i]
+                        ans = ans + '\n' + '{}) {}'.format(i + 1, sis.name)
+
+                    self.send_msg(user, ans)
+
                 elif text == Sistem.COMMAND_CREATION:
                     user.creating_sistem = 1
                     self.send_msg(user, 'Начинаем создание новой системы')
@@ -225,7 +246,12 @@ class Interface:
 
                 elif text == '/pong':
                     user.ponged()
-        except Exception:
+
+                elif text == '/time':
+                    self.send_msg(user, int(time.time()))
+
+        except Exception as e:
+            print(e)
             try:
                 self.send_msg(user, 'Неверный ввод')
             except Exception:

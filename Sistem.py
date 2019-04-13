@@ -5,6 +5,7 @@
 COMMAND_JOIN = '/joinsis_'
 COMMAND_CREATION = '/newsis'
 COMMAND_DELETE = '/delsis_'
+COMMAND_LIST = '/listsis'
 
 
 class Sistem:

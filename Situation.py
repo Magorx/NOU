@@ -14,6 +14,7 @@ FINISHED = 12
 COMMAND_JOIN = '/joinsit_'
 COMMAND_CREATION = '/newsit'
 COMMAND_DELETE = '/delsit_'
+COMMAND_LIST = '/listsit'
 
 
 class Situation:
