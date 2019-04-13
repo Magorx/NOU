@@ -9,7 +9,7 @@ COMMAND_DELETE = '/delsis_'
 
 class Sistem:
     max_id = 0
-    def __init__(self, creator, max_user_count=0, name='NoName'):
+    def __init__(self, creator, max_user_count=0, name='NoName', update_max_id=0):
         Sistem.max_id += 1
         self.id = Sistem.max_id
 
@@ -22,6 +22,9 @@ class Sistem:
 
         self.max_user_count = max_user_count
         self.update_link()
+
+        if update_max_id:
+            Sistem.max_id = update_max_id
 
     def update_link(self):
         self.link = str(self.id) + '_' + self.name

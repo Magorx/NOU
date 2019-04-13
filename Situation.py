@@ -17,9 +17,9 @@ COMMAND_DELETE = '/delsit_'
 
 
 class Situation:
-    max_id = -1
+    max_id = 0
 
-    def __init__(self, user, danger_status=1, start_time=0, end_time=0, ping_freq=1, ping_length=0, emergency_texts=[], name='NoName', interface=None):
+    def __init__(self, user, danger_status=1, start_time=0, end_time=0, ping_freq=1, ping_length=0, emergency_texts=[], name='NoName', interface=None, update_max_id=0):
         Situation.max_id += 1
         self.id = Situation.max_id
 
@@ -47,6 +47,9 @@ class Situation:
         self.status = NOT_STARTED
         self.interface = interface
         self.update_link()
+
+        if update_max_id:
+            Situation.max_id = update_max_id
 
     def update_link(self):
         self.link = str(self.id) + '_' + self.name

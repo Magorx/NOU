@@ -8,8 +8,8 @@ import Sistem
 
 
 class User:
-    max_id = -1
-    def __init__(self, name, interface_ids_dict):
+    max_id = 0
+    def __init__(self, name, interface_ids_dict, update_max_id=0):
         User.max_id += 1
         self.id = User.max_id
 
@@ -29,6 +29,9 @@ class User:
         self.sistems = []
         self.muted = []
 
+        if update_max_id:
+            User.max_id = update_max_id
+
     def add_interface(self, key, value):
         self.__dict__[key] = value
 
@@ -37,6 +40,7 @@ class User:
             return False
 
         situation.connect_pinger(self)
+        User.max_id = len(situation.interface.platform.users) - 1
         self.situations.append(situation)
 
         return True

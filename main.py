@@ -51,6 +51,7 @@ def main():
     global INTERFACES
     INTERFACES = {}
     PP = PP.load_from_dump(DUMP_FILE)
+    PP.update()
     print('Starting PingPonger, current time = {}'.format(int(time.time())))
 
 

@@ -4,7 +4,9 @@
 
 import User
 import Situation
+import Sistem
 import pickle
+import time
 
 
 class Pingponger:
@@ -24,10 +26,14 @@ class Pingponger:
     def load_from_dump(self, filename):
         try:
             f = open(filename, 'rb')
+            return pickle.load(f)
         except Exception:
-            return
+            return self
 
-        return pickle.load(f)
+    def update(self):
+        Situation.Situation(None, update_max_id=len(self.situations)-1)
+        Sistem.Sistem(None, update_max_id=len(self.sistems)-1)
+        User.User(None, {}, update_max_id=len(self.sistems)-1)
 
     def dump_interfaces(self):
         reversed_interface_dict = {}
@@ -69,11 +75,7 @@ class Pingponger:
         self.sistems.append(sistem)
 
     def remove_situation(self, situation):
-        for i in range(len(self.situations)):
-            sit = self.situations[i]
-            if sit == situation:
-                sit.delete()
-                del self.situations[i]
+        situation.end_time = int(time.time())
     
     def init_situation_creation(self, user):
         pass
