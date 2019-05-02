@@ -104,9 +104,16 @@ class Interface:
                         user.creating_situation += 1
                     elif stage == 7:
                         new_sit.emergency_texts = text.split('\n')
-                        self.send_msg(user, 'Проверьте все введенные данные. Подтверждаете создание ситуации? (Ответьте "Да" без кавычек)')
+                        self.send_msg(user, 'Публичная ситуация?')
                         user.creating_situation += 1
                     elif stage == 8:
+                        if text.lower() == 'да':
+                            new_sit.is_public = True
+                        else:
+                            new_sit.is_public = False
+                        self.send_msg(user, 'Проверьте все введенные данные. Подтверждаете создание ситуации? (Ответьте "Да" без кавычек)')
+                        user.creating_situation += 1
+                    elif stage == 9:
                         if text.lower() == 'да':
                             new_sit.interface = self
                             self.platform.add_situation(new_sit)
@@ -133,11 +140,18 @@ class Interface:
                         new_sis.name = text
                         user.creating_sistem += 1
                         self.send_msg(user, 'Введите максимальное число пользователей в системе')
-                    if stage == 2:
+                    elif stage == 2:
                         new_sis.max_user_count = int(text)
                         user.creating_sistem += 1
-                        self.send_msg(user, 'Проверьте все введенные данные. Подтверждаете создание ситуации? (Ответьте "Да" без кавычек)')
+                        self.send_msg(user, 'Публична система?')
                     if stage == 3:
+                        if text.lower() == 'да':
+                            new_sis.is_public = True
+                        else:
+                            new_sis.is_public = False
+                        user.creating_sistem += 1
+                        self.send_msg(user, 'Проверьте все введенные данные. Подтверждаете создание ситуации? (Ответьте "Да" без кавычек)')
+                    if stage == 4:
                         if text.lower() == 'да':
                             self.platform.add_sistem(new_sis)
                             new_sis.update_link()
@@ -256,8 +270,23 @@ class Interface:
                 elif text == '/time':
                     self.send_msg(user, int(time.time()))
 
+                elif text == '/hub':
+                    ans = 'Публичные ситуации:'
+                    for i in range(len(self.platform.situations)):
+                        sit = self.platform.situations[i]
+                        sit.update_link()
+                        if sit.end_time > int(time.time()) and sit.is_public:
+                            ans = ans + '\n' + '{}) {}'.format(i + 1, sit.link)
+                    ans = ans + '\n\n' + 'Публичные системы:'
+                    for i in range(len(self.platform.sistems)):
+                        sis = self.platform.sistems[i]
+                        sis.update_link()
+                        print(self.platform.sistems, sis.id)
+                        ans = ans + '\n' + '{}) {}'.format(i + 1, sis.link)
+                    self.send_msg(user, ans)
+
         except Exception as e:
-            print(e)
+            print(e, '|| INTERFACE ||')
             try:
                 self.send_msg(user, 'Неверный ввод')
             except Exception:

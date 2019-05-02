@@ -20,7 +20,7 @@ COMMAND_LIST = '/listsit'
 class Situation:
     max_id = 0
 
-    def __init__(self, user, danger_status=1, start_time=0, end_time=0, ping_freq=1, ping_length=0, emergency_texts=[], name='NoName', interface=None, update_max_id=0):
+    def __init__(self, user, danger_status=1, start_time=0, end_time=0, ping_freq=1, ping_length=0, emergency_texts=[], name='NoName', interface=None, update_max_id=0, is_public=False):
         Situation.max_id += 1
         self.id = Situation.max_id
 
@@ -47,6 +47,7 @@ class Situation:
         self.name = name
         self.status = NOT_STARTED
         self.interface = interface
+        self.is_public = is_public
         self.update_link()
 
         if update_max_id:

@@ -10,7 +10,7 @@ COMMAND_LIST = '/listsis'
 
 class Sistem:
     max_id = 0
-    def __init__(self, creator, max_user_count=0, name='NoName', update_max_id=0):
+    def __init__(self, creator, max_user_count=0, name='NoName', update_max_id=0, is_public=False):
         Sistem.max_id += 1
         self.id = Sistem.max_id
 
@@ -22,6 +22,7 @@ class Sistem:
         self.sistems = []
 
         self.max_user_count = max_user_count
+        self.is_public = is_public
         self.update_link()
 
         if update_max_id:
