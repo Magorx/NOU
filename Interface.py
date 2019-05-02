@@ -190,20 +190,16 @@ class Interface:
                     ans = 'Ситуации, в которых вы наблюдатель:'
                     for i in range(len(user.situations)):
                         sit = user.situations[i]
+                        sit.update_link()
                         if sit.end_time > int(time.time()):
-                            ans = ans + '\n' + '{}) {}'.format(i + 1, sit.name)
+                            ans = ans + '\n' + '{}) {}'.format(i + 1, sit.link)
 
                     ans += '\n\n' + 'Ситуации, созданный вами:'
                     for i in range(len(user.own_situations)):
                         sit = user.own_situations[i]
+                        sit.update_link()
                         if sit.end_time > int(time.time()):
-                            ans = ans + '\n' + '{}) {}_{}'.format(i + 1, sit.id, sit.name)
-
-                elif text == Sistem.COMMAND_LIST:
-                    ans = 'Системы, в которых вы состоите:'
-                    for i in range(len(user.sistems)):
-                        sis = user.sistems[i]
-                        ans = ans + '\n' + '{}) {}'.format(i + 1, sis.name)
+                            ans = ans + '\n' + '{}) {}_{}'.format(i + 1, sit.id, sit.link)
 
                     self.send_msg(user, ans)
 
@@ -231,12 +227,22 @@ class Interface:
                     link = text[len(Sistem.COMMAND_DELETE):]
                     id = int(link.split('_')[0])
 
-                    sis = self.platform.situation_by_id(id)
+                    sis = self.platform.sistem_by_id(id)
+                    print(id, sis)
                     if sis is None:
                         self.send_msg(user, 'Несуществующая система')
                     else:
                         self.platform.remove_sistem(sis)
                         self.send_msg(user, 'Ситуация {} удалена'.format(sis.name))
+
+                elif text == Sistem.COMMAND_LIST:
+                    ans = 'Системы, в которых вы состоите:'
+                    for i in range(len(user.sistems)):
+                        sis = user.sistems[i]
+                        sis.update_link()
+                        print(self.platform.sistems, sis.id)
+                        ans = ans + '\n' + '{}) {}'.format(i + 1, sis.link)
+                    self.send_msg(user, ans)
                 
                 elif text == '/extra':
                     sit = Situation.create_emergency_situation(user, self)

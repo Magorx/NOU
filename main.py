@@ -35,7 +35,6 @@ def everysecond_check():
         t += 1
         if t % 5 == 2:
             print('[{}]Checking is OK.'.format(int(time.time())))
-            print(len(PP.situations))
             f = open(DUMP_FILE, 'wb')
             interfaces = PP.dump_interfaces()
             pickle.dump(PP, f)

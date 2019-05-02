@@ -60,11 +60,7 @@ class User:
             return True
 
     def exit_sistem(self, sistem):
-        for i in range(len(self.situations)):
-            sis = self.sistems[i]
-            if sit == sistem:
-                sit.disconnect_pinger(self)
-                del self.sistems[i]
+        del self.sistems[self.sistems.index(sistem)]
 
     def created_situation(self, situation):
         print(self.own_situations)

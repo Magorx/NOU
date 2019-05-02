@@ -98,6 +98,10 @@ class Pingponger:
                 return sis
         return None
 
+    def remove_sistem(self, sis):
+        sis.delete()
+        del self.sistems[self.sistems.index(sis)]
+
     def check_situations(self):
         for sit in self.situations:
             sit.check()

@@ -19,7 +19,7 @@ class TgBot(Interface.Interface):
         chat = message.chat
         text = message.text
         user = self.platform.user_by_tg_chat_id(chat.id)
-        print('Msg recieved: ' + text)
+        print('[{}]: {}'.format(user.name, text))
         
         if user is None:
             self.platform.register_user(message.from_user.username, {'tg_chat_id' : chat.id})
